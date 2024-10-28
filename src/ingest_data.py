@@ -26,7 +26,7 @@ class CSVIngestor(DataIngestor):
     ingest_data(self, data_source_uri: str)
         Ingests data from a data source and saves it in the `datasets` directory.s
     """
-    def ingest_data(self, data_source_uri: str) -> pandas.core.frame.DataFrame:
+    def ingest_data(self, data_source_uri: str) -> None:
         """
         If not already saved in the `datasets` directory, this method ingests a `csv`
         file from a data sourse and saves it in the `datasets` directory.
@@ -38,8 +38,7 @@ class CSVIngestor(DataIngestor):
         
         Returns
         -------
-        df : pandas.core.frame.DataFrame
-            The DataFrame containing the ingested data.
+        `None`
         """
         filename: str = data_source_uri.split('/')[-1]
         foldername: str = "datasets"
@@ -68,10 +67,19 @@ class ZipFileIngestor(DataIngestor):
     """
     A class to ingest `zip` data from a data source.
     """
-    def ingest_data(self, data_source_uri: str) -> pandas.core.frame.DataFrame:
+    def ingest_data(self, data_source_uri: str) -> None:
         """
         If not already saved in the `datasets` directory, this extracts the contents of a `zip` file
         and saves it in the datasets directory.
+        
+        Parameters
+        -----------
+        data_source_uri : str
+            The `uri` of the data source.
+        
+        Returns
+        -------
+        `None`
         """
         filename: str = data_source_uri.split('/')[-1][:-3] + "csv"
         filename = filename.replace("+", "_")
@@ -99,10 +107,7 @@ class ZipFileIngestor(DataIngestor):
                 print(f"Failed to download file. Status code: {response.status_code}")
         except Exception as e:
             print(f"\033[31mAn error occured in connecting to the specified uri: {e}\033[0m")
-        
-         # Download the file
-        
-
+    
 class DataIngestorFactory:
     @staticmethod
     def get_ingestor(data_source_uri: str) -> DataIngestor:
