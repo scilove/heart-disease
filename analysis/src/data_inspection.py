@@ -121,13 +121,13 @@ class DataInspector:
         
         
 # Example Usage
-if __name__ == "__main__":
-    df: pd.DataFrame = pd.read_csv("datasets\\heart_failure_clinical_records_dataset.csv")
+# if __name__ == "__main__":
+    # df: pd.DataFrame = pd.read_csv("datasets\\heart_failure_clinical_records_dataset.csv")
     
-    inspector: DataInspector = DataInspector(DataTypeInspection())
-    inspector.inspect(df)
+    # inspector: DataInspector = DataInspector(DataTypeInspection())
+    # inspector.inspect(df)
     
-    # Switch between strategies
-    inspector.set_strategy(SummaryStatisticsInspection())
-    inspector.inspect(df) 
+    # # Switch between strategies
+    # inspector.set_strategy(SummaryStatisticsInspection())
+    # inspector.inspect(df)
     
