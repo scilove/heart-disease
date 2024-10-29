@@ -1,6 +1,5 @@
 import requests
 import os
-import pandas
 import zipfile
 from abc import ABC, abstractmethod
 from requests import Response
@@ -42,6 +41,7 @@ class CSVIngestor(DataIngestor):
         """
         filename: str = data_source_uri.split('/')[-1]
         foldername: str = "datasets"
+        
         if not os.path.exists(foldername):
             os.makedirs(foldername)
             
@@ -54,14 +54,17 @@ class CSVIngestor(DataIngestor):
          # Download the file
         try:
             response: Response = requests.get(data_source_uri)
+            
             if response.status_code == 200:
                 with open(file_path, "wb") as file:
                     file.write(response.content)
                     print(f"\033[34mFile '{filename}' downloaded successfully.\033[32m")
             else:
                 print(f"\033[31mFailed to download file. Status code: {response.status_code}\033[0m")
+                
         except Exception as e:
             print(f"An error occured in connecting to the specified uri: {e}")
+
 
 class ZipFileIngestor(DataIngestor):
     """
@@ -84,15 +87,16 @@ class ZipFileIngestor(DataIngestor):
         filename: str = data_source_uri.split('/')[-1][:-3] + "csv"
         filename = filename.replace("+", "_")
         foldername: str = "datasets"
+        
         if not os.path.exists(foldername):
             os.makedirs(foldername)
             
         file_path: str = os.path.join(foldername, filename)
         
-        
         if os.path.exists(file_path):
             print(f"File '{filename}' already exists in '{foldername}'. Download skipped.")
             return 
+        
         try:
             response: Response = requests.get(data_source_uri)
             if response.status_code == 200:
@@ -105,6 +109,7 @@ class ZipFileIngestor(DataIngestor):
                 os.remove("temp_zip_file.zip")
             else:
                 print(f"Failed to download file. Status code: {response.status_code}")
+        
         except Exception as e:
             print(f"\033[31mAn error occured in connecting to the specified uri: {e}\033[0m")
     
@@ -130,7 +135,8 @@ class DataIngestorFactory:
             return ZipFileIngestor()
         else:
             raise ValueError(f"Unsupported data source: {data_source_uri}")
-        
+
+# Example Usage        
 # if __name__ == "__main__":
 #     uri: str = "https://archive.ics.uci.edu/static/public/519/heart+failure+clinical+records.zip"
 #     data_ingestor = DataIngestorFactory.get_ingestor(uri)
